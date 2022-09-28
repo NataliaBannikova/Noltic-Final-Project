@@ -1,0 +1,28 @@
+<template>
+    <lightning-card title="Create Visit Record">
+        <lightning-layout>
+            <lightning-layout-item size="6">
+                <lightning-input class="slds-p-around_medium" label="Kid" name="kid"
+                                 onchange={kidChangedHandler}></lightning-input>
+                <lightning-input type="time" class="slds-p-around_medium" label="Time  leaving" name="timeLeaving"
+                                 onchange={timeLeavingChangedHandler}></lightning-input>
+                <p slot="footer">Time Field value is:- {timeFieldValue}</p>
+
+                <template if:true={WhoWasWithKidPicklistValues.data}>
+                    <lightning-combobox
+                                        class="slds-p-around_medium"
+                                        required="true"
+                                        name="level"
+                                        label="Who was with Kid?"
+                                        value={value}
+                                        options={WhoWasWithKidPicklistValues.data.values}
+                    >
+                    </lightning-combobox>
+                </template>
+                <br/>
+                <lightning-button class="slds-p-around_medium" label="Create Visit" variant="brand"
+                                  onclick={createVisit}></lightning-button>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-card>
+</template>
