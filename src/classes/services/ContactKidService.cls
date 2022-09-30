@@ -1,57 +1,47 @@
 public with sharing class ContactKidService {
+    public static final Id CONTACT_RECORD_TYPE_KID_ID = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Kid').getRecordTypeId();
 
     public static void validateNumberOfKidsPerGroup(List<Contact> contacts) {
-        Id contRecordTypeKidId = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Kid').getRecordTypeId();
-        System.debug(contRecordTypeKidId);
-        Set<Id> groupIds = new Set<Id>();
-        for (Contact c : contacts) {
-            System.debug(c);
-            System.debug(c.RecordTypeId);
-            if(c.RecordTypeId == contRecordTypeKidId) {
-                groupIds.add(c.Group_Name__c);
+        List<Contact> contactRecTypeKid = getContactRecTypeKid(contacts);
+        Set<Id> groupIds = getGroupsIds(contacts);
+        Map<Id, Group__c> groupsMap = GroupSelector.getGroupsMap(groupIds);
+        for (Contact contact : contactRecTypeKid) {
+            Group__c currentGroup = groupsMap.get(contact.Group_Name__c);
+            if(currentGroup.Number_of_kids__c >= currentGroup.Group_Limit__c) {
+                contact.Group_Name__c.addError(Label.Group_Limit_is_reached);
             }
         }
-        System.debug(groupIds);
-
-        if (groupIds.size() != null) {
-            Map<Id, Group__c> groups = new Map<Id, Group__c>([SELECT Id, Number_of_kids__c, Group_Limit__c FROM Group__c WHERE Id IN : groupIds]);
-            System.debug(groups);
-            for (Contact c : contacts) {
-                if(c.RecordTypeId == contRecordTypeKidId) {
-                    Group__c currentGroup = groups.get(c.Group_Name__c);
-                    System.debug(currentGroup);
-                    if(currentGroup.Number_of_kids__c > currentGroup.Group_Limit__c) {
-                        c.Group_Name__c.addError('Please, choose another Group! A Group Limit is reached - ' + currentGroup.Group_Limit__c);
-                    }
-                }
-            }
-        }
-
     }
 
     public static void updateAmountOfKidsOnGroup(List<Contact> contacts) {
-        Id contRecordTypeKidId = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Kid').getRecordTypeId();
-        System.debug(contRecordTypeKidId);
-        Set<Id> groupIds = new Set<Id>();
-        for (Contact c : contacts) {
-            System.debug(c);
-            System.debug(c.RecordTypeId);
-            if(c.RecordTypeId == contRecordTypeKidId) {
-                groupIds.add(c.Group_Name__c);
-            }
-        }
-        System.debug(groupIds);
-
-        List<AggregateResult> aggregateResults = ContactKidSelector.getNumberOfRelatedKidsForEachGroup(groupIds);
-        System.debug(aggregateResults);
+        Set<Id> groupIds = getGroupsIds(contacts);
+        List<AggregateResult> aggregateResults = GroupSelector.getNumberOfRelatedKidsForEachGroup(groupIds);
         List<Group__c> groupsToUpdate = new List<Group__c>();
-
         for (AggregateResult ar : aggregateResults) {
             groupsToUpdate.add(new Group__c(Id = (Id) ar.get('Group_Name__c'), Number_of_kids__c = (Integer) ar.get('numberOfKids')));
         }
-        System.debug(groupsToUpdate);
         if (groupsToUpdate.size()>0) {
             update groupsToUpdate;
         }
+    }
+
+    private static List<Contact> getContactRecTypeKid(List<Contact> contacts) {
+        List<Contact> contactRecTypeKid = new List<Contact>();
+        for (Contact c : contacts) {
+            if(c.RecordTypeId == CONTACT_RECORD_TYPE_KID_ID) {
+                contactRecTypeKid.add(c);
+            }
+        }
+        return contactRecTypeKid;
+    }
+
+    private static Set<Id> getGroupsIds(List<Contact> contactRecTypeKid) {
+        Set<Id> groupIds = new Set<Id>();
+        for (Contact c : contactRecTypeKid) {
+            if(c.Group_Name__c != null) {
+                groupIds.add(c.Group_Name__c);
+            }
+        }
+        return groupIds;
     }
 }
