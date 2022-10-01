@@ -13,13 +13,11 @@ public with sharing class ContactKidService {
         }
     }
 
-    public static void updateAmountOfKidsOnGroup() {
+    public static void updateAmountOfKidsOnGroup(List<Contact> contacts) {
         List<AggregateResult> aggregateResults = GroupSelector.getNumberOfRelatedKidsForEachGroup();
         List<Group__c> groupsToUpdate = new List<Group__c>();
         for (AggregateResult ar : aggregateResults) {
-            if(ar.get('Group_Name__c') != null){
                 groupsToUpdate.add(new Group__c(Id = (Id) ar.get('Group_Name__c'), Number_of_kids__c = (Integer) ar.get('numberOfKids')));
-            }
         }
         if (groupsToUpdate.size()>0) {
             update groupsToUpdate;
