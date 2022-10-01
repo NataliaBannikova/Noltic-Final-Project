@@ -13,12 +13,13 @@ public with sharing class ContactKidService {
         }
     }
 
-    public static void updateAmountOfKidsOnGroup(List<Contact> contacts) {
-        Set<Id> groupIds = getGroupsIds(contacts);
-        List<AggregateResult> aggregateResults = GroupSelector.getNumberOfRelatedKidsForEachGroup(groupIds);
+    public static void updateAmountOfKidsOnGroup() {
+        List<AggregateResult> aggregateResults = GroupSelector.getNumberOfRelatedKidsForEachGroup();
         List<Group__c> groupsToUpdate = new List<Group__c>();
         for (AggregateResult ar : aggregateResults) {
-            groupsToUpdate.add(new Group__c(Id = (Id) ar.get('Group_Name__c'), Number_of_kids__c = (Integer) ar.get('numberOfKids')));
+            if(ar.get('Group_Name__c') != null){
+                groupsToUpdate.add(new Group__c(Id = (Id) ar.get('Group_Name__c'), Number_of_kids__c = (Integer) ar.get('numberOfKids')));
+            }
         }
         if (groupsToUpdate.size()>0) {
             update groupsToUpdate;
@@ -37,9 +38,9 @@ public with sharing class ContactKidService {
 
     private static Set<Id> getGroupsIds(List<Contact> contactRecTypeKid) {
         Set<Id> groupIds = new Set<Id>();
-        for (Contact c : contactRecTypeKid) {
-            if(c.Group_Name__c != null) {
-                groupIds.add(c.Group_Name__c);
+        for (Contact contact : contactRecTypeKid) {
+            if(contact.Group_Name__c != null) {
+                groupIds.add(contact.Group_Name__c);
             }
         }
         return groupIds;

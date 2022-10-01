@@ -1,6 +1,6 @@
 public with sharing class GroupSelector {
-    public static List<AggregateResult> getNumberOfRelatedKidsForEachGroup(Set<Id> groupIds) {
-        return  [SELECT Group_Name__c, COUNT(Id) numberOfKids FROM Contact WHERE Group_Name__c IN : groupIds GROUP BY Group_Name__c];
+    public static List<AggregateResult> getNumberOfRelatedKidsForEachGroup() {
+        return  [SELECT Group_Name__c, COUNT(Id) numberOfKids FROM Contact GROUP BY Group_Name__c];
     }
 
     public static Map<Id, Group__c> getGroupsMap(Set<Id> groupIds) {
