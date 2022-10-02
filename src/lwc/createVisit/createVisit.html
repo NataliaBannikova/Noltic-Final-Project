@@ -1,0 +1,29 @@
+<template>
+    <lightning-card title="Create Visit Record">
+        <lightning-layout>
+            <lightning-layout-item size="6">
+                <lightning-combobox
+                        class="slds-p-around_medium"
+                        label="Kids"
+                        value={value}
+                        options={options}
+                        onchange={handleChangedKidValue}
+                        placeholder="Select the Kid"
+                >
+                </lightning-combobox>
+                <lightning-input type="time"
+                                 time-style="short"
+                                 class="slds-p-around_medium"
+                                 label="Time leaving"
+                                 name="timeLeaving"
+                                 value={timeFieldValue}
+                                 min="08:00"
+                                 max="19:00"
+                                 onchange={handleTimeChange}></lightning-input>
+                <br/>
+                <lightning-button class="slds-p-around_medium" label="Create Visit" variant="brand"
+                                  onclick={createVisit}></lightning-button>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-card>
+</template>
