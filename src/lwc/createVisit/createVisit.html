@@ -11,15 +11,17 @@
                         placeholder="Select the Kid"
                 >
                 </lightning-combobox>
-                <lightning-input type="time"
-                                 time-style="short"
-                                 class="slds-p-around_medium"
-                                 label="Time leaving"
-                                 name="timeLeaving"
-                                 value={timeFieldValue}
-                                 min="08:00"
-                                 max="19:00"
-                                 onchange={handleTimeChange}></lightning-input>
+
+                <lightning-combobox
+                        class="slds-p-around_medium"
+                        label="Was with Kid"
+                        value={wasWithKidValue}
+                        options={wasWithKidOptions}
+                        onchange={handleChangedWhoWasValue}
+                        placeholder="Select Responsible Person"
+                >
+                </lightning-combobox>
+
                 <br/>
                 <lightning-button class="slds-p-around_medium" label="Create Visit" variant="brand"
                                   onclick={createVisit}></lightning-button>
