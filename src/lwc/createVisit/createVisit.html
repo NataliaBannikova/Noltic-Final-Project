@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title="Create Visit Record">
+        <lightning-layout>
+            <lightning-layout-item size="6">
+                <lightning-combobox
+                        class="slds-p-around_medium"
+                        label="Kids"
+                        value={value}
+                        options={options}
+                        onchange={handleChangedKidValue}
+                        placeholder="Select the Kid"
+                >
+                </lightning-combobox>
+
+                <lightning-combobox
+                        class="slds-p-around_medium"
+                        label="Was with Kid"
+                        value={wasWithKidValue}
+                        options={wasWithKidOptions}
+                        onchange={handleChangedWhoWasValue}
+                        placeholder="Select Responsible Person"
+                >
+                </lightning-combobox>
+                <br/>
+                <lightning-button class="slds-p-around_medium" label="Create Visit" variant="brand"
+                                  onclick={createVisit}></lightning-button>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-card>
+</template>
