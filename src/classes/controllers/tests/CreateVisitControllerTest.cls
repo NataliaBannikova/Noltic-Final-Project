@@ -1,6 +1,5 @@
 @IsTest
 private class CreateVisitControllerTest {
-    public static final Id CONTACT_RECORD_TYPE_RELATIVE_ID = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Relative').getRecordTypeId();
     @IsTest
     static void getKids() {
         //given
@@ -25,11 +24,11 @@ private class CreateVisitControllerTest {
         insert gr;
         List<Contact> kids = TestDtFactory.createKidsForGroup(1, gr.Id);
         insert kids;
-        Contact relative = new Contact(LastName='Test', MobilePhone= '1234567891', RecordTypeId= CONTACT_RECORD_TYPE_RELATIVE_ID);
+        Contact relative = TestDtFactory.createContactRecordTypeRelative();
         insert relative;
-        Responsible_Person__c rp = new Responsible_Person__c(Contact__c = relative.Id);
-        insert rp;
-        KidsToResponsiblePersons__c junctionObj = new KidsToResponsiblePersons__c(Kid__c = kids[0].Id, Responsible_Person__c = rp.Id);
+        Responsible_Person__c responsiblePerson = TestDtFactory.createResponsiblePerson(relative.Id);
+        insert responsiblePerson;
+        KidsToResponsiblePersons__c junctionObj = TestDtFactory.createKidsToResponsiblePersons(kids[0].Id, responsiblePerson.Id);
         insert junctionObj;
 
         //when

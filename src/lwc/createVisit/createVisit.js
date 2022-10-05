@@ -16,8 +16,6 @@ export default class CreateVisit extends LightningElement {
     @track wasWithKidValue = '';
     @track optionsWasWthKidArray = [];
 
-    // get Kids Records
-
     get options(){
         return this.optionsArray;
     }
@@ -32,7 +30,6 @@ export default class CreateVisit extends LightningElement {
                 this.optionsArray = arr;
             })
     }
-    // get Responsible Person Related to selected Kid
 
     get wasWithKidOptions(){
         return this.optionsWasWthKidArray;
@@ -54,7 +51,6 @@ export default class CreateVisit extends LightningElement {
     handleChangedWhoWasValue(event){
         this.wasWithKidValue = event.target.value;
     }
-    // create Visit
 
     createVisit(){
         let fields = {'Kid__c' : this.value, 'Was_with_Kid__c' : this.wasWithKidValue};

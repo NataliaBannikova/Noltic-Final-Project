@@ -16,6 +16,7 @@ private class ContactKidServiceTest {
         //then
         List<Group__c> result = [SELECT Id, Number_of_kids__c FROM Group__c WHERE Id = :newGroup.Id];
         System.assertEquals(kids.size(), result[0].Number_of_kids__c);
+        System.debug(result[0].Number_of_kids__c);
     }
 
     @IsTest
@@ -23,6 +24,7 @@ private class ContactKidServiceTest {
         //given
         Group__c newGroup = TestDtFactory.createGroupWithKidsLimit(15, 15);
         insert newGroup;
+        System.debug(newGroup.Number_of_kids__c);
         List<Contact> kids = TestDtFactory.createKidsForGroup(1, newGroup.Id);
         Exception ex = null;
 
@@ -43,16 +45,17 @@ private class ContactKidServiceTest {
     }
 
     @IsTest
-    static void updateAmountOfKidsOnGroupTest() {
+    static void updateAmountOfKidsOnGroupIfKidIsDeletedTest() {
         //given
         Group__c newGroup = TestDtFactory.createGroupWithKidsLimit(15, 0);
         insert newGroup;
         List<Contact> kids = TestDtFactory.createKidsForGroup(10, newGroup.Id);
+        insert kids;
+        delete kids[0];
 
         //whens
         Test.startTest();
-        insert kids;
-        delete kids[0];
+        ContactKidService.updateAmountOfKidsOnGroup(kids);
         Test.stopTest();
 
         //then

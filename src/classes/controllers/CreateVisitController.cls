@@ -18,7 +18,7 @@ public with sharing class CreateVisitController {
         }
 
         List<Contact> relatives = [
-                SELECT Id, Name, Email, MobilePhone, (SELECT Relation_to_Kid__c FROM Responsible_Persons__r WHERE Primary_persone__c = true )
+                SELECT Id, Name
                 FROM Contact
                 WHERE RecordType.Name = 'Relative' AND Id = :relativesIds
         ];
