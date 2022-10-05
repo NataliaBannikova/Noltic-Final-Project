@@ -26,9 +26,9 @@ public with sharing class ContactKidService {
 
     private static List<Contact> getContactRecTypeKid(List<Contact> contacts) {
         List<Contact> contactRecTypeKid = new List<Contact>();
-        for (Contact c : contacts) {
-            if(c.RecordTypeId == CONTACT_RECORD_TYPE_KID_ID) {
-                contactRecTypeKid.add(c);
+        for (Contact contact : contacts) {
+            if(contact.RecordTypeId == CONTACT_RECORD_TYPE_KID_ID) {
+                contactRecTypeKid.add(contact);
             }
         }
         return contactRecTypeKid;

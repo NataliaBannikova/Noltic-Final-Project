@@ -6,20 +6,22 @@ public with sharing class CreateVisitController {
     }
 
     @AuraEnabled
-    public static List<Responsible_Person__c> getResponsiblePersons(String selectedKidId) {
+    public static List<Contact> getRelatives(String selectedKidId) {
         List<KidsToResponsiblePersons__c> kidsToResponsiblePersonsLst = [
-                SELECT Kid__c, Responsible_Person__c
+                SELECT Kid__c, Responsible_Person__r.Contact__r.Id
                 FROM KidsToResponsiblePersons__c
                 WHERE Kid__c = :selectedKidId];
-        Set<Id> respPersonsIds = new Set<Id>();
+
+        Set<Id> relativesIds = new Set<Id>();
         for(KidsToResponsiblePersons__c item: kidsToResponsiblePersonsLst) {
-            respPersonsIds.add(item.Responsible_Person__c);
+            relativesIds.add(item.Responsible_Person__r.Contact__r.Id);
         }
-        List<Responsible_Person__c> responsiblePersons = [
-                SELECT Id, Name
-                FROM Responsible_Person__c
-                WHERE Id = :respPersonsIds
+
+        List<Contact> relatives = [
+                SELECT Id, Name, Email, MobilePhone, (SELECT Relation_to_Kid__c FROM Responsible_Persons__r WHERE Primary_persone__c = true )
+                FROM Contact
+                WHERE RecordType.Name = 'Relative' AND Id = :relativesIds
         ];
-        return responsiblePersons;
+        return relatives;
     }
 }

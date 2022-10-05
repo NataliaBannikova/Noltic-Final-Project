@@ -3,24 +3,24 @@ public with sharing class GroupService {
         Map<Id, Contact> mapTeachers = getMapTeachers();
         for (Group__c g : groups) {
             if (mapTeachers.containsKey(g.Teacher__c)) {
-                g.addError('A Group already exist for the Teacher - ' + mapTeachers.get(g.Teacher__c).Name);
+                g.addError(Label.Group_already_exist_for_the_Teacher + mapTeachers.get(g.Teacher__c).Name);
             }
         }
     }
 
     public static void OneToOneValidateOnUpdate (List<Group__c> groups, Map<Id,Group__c> groupsOld) {
         Map<Id, Contact> mapTeachers = getMapTeachers();
-        for (Group__c g : groups) {
-            if (mapTeachers.containsKey(g.Teacher__c) && g.Teacher__c != groupsOld.get(g.Id).Teacher__c) {
-                g.addError('A Group already exist for the Teacher - ' + mapTeachers.get(g.Teacher__c).Name);
+        for (Group__c gr : groups) {
+            if (mapTeachers.containsKey(gr.Teacher__c) && gr.Teacher__c != groupsOld.get(gr.Id).Teacher__c) {
+                gr.addError(Label.Group_already_exist_for_the_Teacher + mapTeachers.get(gr.Teacher__c).Name);
             }
         }
     }
 
     private static Set<Id> getTeacherIds() {
         Set<Id> teacherIds = new Set<Id>();
-        for (Group__c g : [SELECT Teacher__c FROM Group__c]) {
-            teacherIds.add(g.Teacher__c);
+        for (Group__c gr : [SELECT Teacher__c FROM Group__c]) {
+            teacherIds.add(gr.Teacher__c);
         }
         return teacherIds;
     }
@@ -30,8 +30,8 @@ public with sharing class GroupService {
         Map<Id, Contact> mapTeachers = new Map<Id, Contact>();
         List<Contact> lstTeachers = GroupTeachersSelector.getTeacherFromGroups(teacherIds);
         if (!lstTeachers.isEmpty()) {
-            for (Contact c : lstTeachers) {
-                mapTeachers.put(c.Id, c);
+            for (Contact contact : lstTeachers) {
+                mapTeachers.put(contact.Id, contact);
             }
         }
         return mapTeachers;

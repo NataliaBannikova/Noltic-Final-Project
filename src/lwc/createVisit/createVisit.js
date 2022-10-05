@@ -1,7 +1,7 @@
 import {LightningElement, track, wire} from 'lwc';
 import { getObjectInfo} from 'lightning/uiObjectInfoApi';
 import getKids from '@salesforce/apex/CreateVisitController.getKids';
-import getResponsiblePersons from '@salesforce/apex/CreateVisitController.getResponsiblePersons';
+import getRelatives from '@salesforce/apex/CreateVisitController.getRelatives';
 import Visit__c_OBJECT from '@salesforce/schema/Visit__c';
 import { createRecord } from 'lightning/uiRecordApi';
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
@@ -9,8 +9,8 @@ import {ShowToastEvent} from "lightning/platformShowToastEvent";
 export default class CreateVisit extends LightningElement {
     @wire(getObjectInfo, { objectApiName: Visit__c_OBJECT })
     objectInfo;
-    @wire(getResponsiblePersons)
-    responsiblePersons;
+    @wire(getRelatives)
+    relatives;
     @track value = '';
     @track optionsArray = [];
     @track wasWithKidValue = '';
@@ -40,7 +40,7 @@ export default class CreateVisit extends LightningElement {
 
     handleChangedKidValue(event) {
         this.value = event.target.value;
-        getResponsiblePersons({selectedKidId: this.value})
+        getRelatives({selectedKidId: this.value})
             .then(response => {
                 let arr = [];
                 for (let i = 0; i < response.length; i++) {
@@ -67,11 +67,8 @@ export default class CreateVisit extends LightningElement {
                 mode: 'dismissible'
             });
             this.dispatchEvent(evt);
-            this.template.querySelectorAll('lightning-combobox').forEach(each => {
-                each.value = null;
-            });
-
-
+            this.value ='';
+            this.wasWithKidValue ='';
         }).catch(error => {
             const evt = new ShowToastEvent({
                 title: 'Error creating Visit',

@@ -1,0 +1,4 @@
+<aura:component description="CreateNewVisit" implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride" access="global" >
+    <c:createVisit objectApiName="Visit__c"/>
+</aura:component>
+
