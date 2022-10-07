@@ -6,6 +6,7 @@ public with sharing class GroupTriggerHandler {
             }
             when BEFORE_UPDATE {
                 GroupService.OneToOneValidateOnUpdate(groups,groupsOld);
+                GroupService.ValidateGroupLimit(groups);
             }
         }
     }

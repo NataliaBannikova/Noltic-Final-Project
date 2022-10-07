@@ -1,4 +1,12 @@
 public with sharing class GroupService {
+    public static void ValidateGroupLimit (List<Group__c> groups) {
+        for (Group__c g : groups) {
+            if (g.Group_Limit__c < g.Number_of_kids__c) {
+                g.Group_Limit__c.addError(Label.Group_Limit_can_not_be_less_than_Number_of_Kids);
+            }
+        }
+    }
+
     public static void OneToOneValidateOnInsert (List<Group__c> groups) {
         Map<Id, Contact> mapTeachers = getMapTeachers();
         for (Group__c g : groups) {
