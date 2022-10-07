@@ -43,6 +43,15 @@ public with sharing class TestDtFactory {
         return kids;
     }
 
+    public static List<Group__c> createGroupLstWithLimit (Integer groupLimit, Integer numberOfKids) {
+        List<Group__c> groupsLst = new List<Group__c>();
+        for (Integer i = 0; i < 5; i++) {
+            Group__c g = new Group__c(Group_Limit__c = groupLimit, Number_of_kids__c = numberOfKids);
+            groupsLst.add(g);
+        }
+        return groupsLst;
+    }
+
     public static KidsToResponsiblePersons__c createKidsToResponsiblePersons(Id kidId, Id responsiblePersonId) {
         KidsToResponsiblePersons__c kidsToResponsiblePersons = new KidsToResponsiblePersons__c(Kid__c = kidId, Responsible_Person__c = responsiblePersonId);
         return kidsToResponsiblePersons;

@@ -1,5 +1,28 @@
 @IsTest
 private class GroupServiceTest {
+    @IsTest
+    static void ValidateGroupLimitTest() {
+        //given
+        List<Group__c> newGroups = TestDtFactory.createGroupLstWithLimit(10,5);
+        insert newGroups;
+        for (Group__c g: newGroups) {
+            g.Group_Limit__c = g.Group_Limit__c - g.Number_of_kids__c - 1;
+        }
+        Exception ex = null;
+
+        //whens
+        Test.startTest();
+        try {
+            update newGroups;
+        } catch (Exception e) {
+            ex = e;
+        }
+        Test.stopTest();
+
+        //then
+        System.assertNotEquals(null, ex);
+        System.assert(ex.getMessage().contains(Label.Group_Limit_can_not_be_less_than_Number_of_Kids));
+    }
 
     @IsTest
     static void OneToOneValidateOnInsertTest_positive() {
